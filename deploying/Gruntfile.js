@@ -8,7 +8,8 @@ module.exports = function(grunt) {
 					'index.html', 'stylesheets/style.css', 'javascripts/app.js'
 				]
 			}
-		}
+		},
+		pkg: grunt.file.readJSON('package.json')
 	});
 
 	grunt.registerTask('createFolder', 'Create the working folder', function() {
@@ -59,6 +60,10 @@ module.exports = function(grunt) {
 		files.forEach(function(item) {
 			recursiveCopy(item, workingDirectory);
 		});
+
+		var content = '<%=pkg.name %> version <%= pkg.version %>';
+		content = grunt.template.process(content);
+		grunt.file.write(workingDirectory + '/version.txt', content);
 	});
 
 	grunt.registerTask('deploy', 'Deploy files', ['clean', 'createFolder', 'copyFilesRecursive']);
